@@ -9,8 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_tts: ^4.0.2
-  speech_to_text: ^7.0.0
+  flutter_tts: ^3.8.5
+  speech_to_text: ^6.6.0
   cupertino_icons: ^1.0.6
 
 dev_dependencies:

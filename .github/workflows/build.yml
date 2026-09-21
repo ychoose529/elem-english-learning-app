@@ -23,20 +23,18 @@ jobs:
         with:
           flutter-version: '3.22.x'
 
-      - name: 步驟 1 - 自動生成 Android 專案結構
-        run: flutter create . --project-name elem_english_app --platforms=android --org com.example
+      - name: 步驟 1 - 建立標準 Android 原生架構
+        run: |
+          flutter config --enable-android
+          flutter create . --project-name elem_english_app --platforms=android --org com.example
 
       - name: 步驟 2 - 下載依賴套件
         run: flutter pub get
 
-      - name: 步驟 3 - 全域修復 jcenter 與 compileSdk 36 設定
+      - name: 步驟 3 - 自動替換 jcenter() 並設定 compileSdkVersion
         run: |
-          # 替換所有舊套件的 jcenter() 為 mavenCentral()
           find ~/.pub-cache/ -name "build.gradle" -exec sed -i 's/jcenter()/mavenCentral()/g' {} + || true
-          
-          # 將 android/app/build.gradle 中的 compileSdkVersion 設為 36
-          sed -i 's/compileSdkVersion.*/compileSdkVersion 36/g' android/app/build.gradle || true
-          sed -i 's/compileSdk =.*/compileSdk = 36/g' android/app/build.gradle || true
+          sed -i 's/compileSdkVersion.*/compileSdkVersion 34/g' android/app/build.gradle || true
 
       - name: 步驟 4 - 建置 APK
         run: flutter build apk --release --no-tree-shake-icons
