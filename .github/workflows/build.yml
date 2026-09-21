@@ -26,8 +26,8 @@ jobs:
       - name: 下載依賴套件
         run: flutter pub get
 
-      - name: 自動生成 Android 專案結構
-        run: flutter create . --platforms=android --org com.example
+      - name: 自動生成 Android 專案結構 (指定合法名稱)
+        run: flutter create . --project-name elem_english_app --platforms=android --org com.example
 
       - name: 全域強制將 jcenter() 替換為 mavenCentral() 修復套件問題
         run: |
