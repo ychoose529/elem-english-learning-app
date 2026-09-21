@@ -23,23 +23,17 @@ jobs:
         with:
           flutter-version: '3.22.x'
 
-      - name: 步驟 1 - 建立標準 Android 原生架構
-        run: |
-          flutter config --enable-android
-          flutter create . --project-name elem_english_app --platforms=android --org com.example
-
-      - name: 步驟 2 - 下載依賴套件
+      - name: 下載依賴套件
         run: flutter pub get
 
-      - name: 步驟 3 - 自動替換 jcenter() 並設定 compileSdkVersion
+      - name: 全域強制將 jcenter() 替換為 mavenCentral()
         run: |
           find ~/.pub-cache/ -name "build.gradle" -exec sed -i 's/jcenter()/mavenCentral()/g' {} + || true
-          sed -i 's/compileSdkVersion.*/compileSdkVersion 34/g' android/app/build.gradle || true
 
-      - name: 步驟 4 - 建置 APK
+      - name: 建置 APK
         run: flutter build apk --release --no-tree-shake-icons
 
-      - name: 步驟 5 - 釋出並提供 APK 下載
+      - name: 釋出並提供 APK 下載
         uses: actions/upload-artifact@v4
         with:
           name: English-Learning-App-APK
