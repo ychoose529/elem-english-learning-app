@@ -1,4 +1,4 @@
-﻿name: 自動雲端編譯 APK
+name: 自動雲端編譯 APK
 
 on:
   push:
