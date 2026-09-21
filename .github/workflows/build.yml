@@ -17,16 +17,17 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          cache: 'gradle'
 
       - name: 配置 Flutter 環境
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.19.x'
-          cache: true
 
       - name: 下載依賴套件
         run: flutter pub get
+
+      - name: 自動生成專案缺少的平台設定
+        run: flutter create . --platforms=android
 
       - name: 自動建置 APK
         run: flutter build apk --release
