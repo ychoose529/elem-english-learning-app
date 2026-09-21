@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
   String _spokenText = "";
   String _feedbackMessage = "";
 
-  // 涵蓋 A-Z 國小核心基礎單字庫 (共 26 個常用詞彙與生活句型)
+  // 涵蓋 A-Z 國小核心基礎單字庫
   List<LearningCard> _cards = [
     LearningCard(word: "Apple", translation: "蘋果", sentence: "I eat a red apple every day.", imageUrl: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=500"),
     LearningCard(word: "Banana", translation: "香蕉", sentence: "Monkeys love yellow bananas.", imageUrl: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=500"),
@@ -145,7 +145,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  // 匯入自訂 JSON 對話框
   void _showImportDialog() {
     _jsonImportController.clear();
     showDialog(
@@ -192,7 +191,7 @@ class _HomePageState extends State<HomePage> {
                   });
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("✅ 成功匯入 \ 個新單字！")),
+                    SnackBar(content: Text("✅ 成功匯入 ${newCards.length} 個新單字！")),
                   );
                 }
               } catch (e) {
@@ -215,7 +214,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("🎈 國小英文聽說讀寫樂園 (\/\)", 
+        title: Text("🎈 國小英文聽說讀寫樂園 (${_currentIndex + 1}/${_cards.length})", 
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         centerTitle: true,
         backgroundColor: Colors.orangeAccent,
@@ -270,7 +269,7 @@ class _HomePageState extends State<HomePage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
-                        "📖 閱讀句型：\",
+                        "📖 閱讀句型：${currentCard.sentence}",
                         textAlign: TextAlign.center,
                         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                       ),
@@ -310,7 +309,7 @@ class _HomePageState extends State<HomePage> {
             if (_spokenText.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 10),
-                child: Text("你說的是：\", style: const TextStyle(fontSize: 16, color: Colors.blueGrey)),
+                child: Text("你說的是：$_spokenText", style: const TextStyle(fontSize: 16, color: Colors.blueGrey)),
               ),
             const SizedBox(height: 15),
             Card(
