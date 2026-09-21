@@ -66,26 +66,34 @@ class _HomePageState extends State<HomePage> {
   String _spokenText = "";
   String _feedbackMessage = "";
 
-  // 預設國小單字庫
+  // 涵蓋 A-Z 國小核心基礎單字庫 (共 26 個常用詞彙與生活句型)
   List<LearningCard> _cards = [
-    LearningCard(
-      word: "Apple",
-      translation: "蘋果",
-      sentence: "I eat a red apple every day.",
-      imageUrl: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=500",
-    ),
-    LearningCard(
-      word: "Banana",
-      translation: "香蕉",
-      sentence: "Monkeys like to eat yellow bananas.",
-      imageUrl: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=500",
-    ),
-    LearningCard(
-      word: "Cat",
-      translation: "小貓",
-      sentence: "The cute cat is sleeping on the chair.",
-      imageUrl: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500",
-    ),
+    LearningCard(word: "Apple", translation: "蘋果", sentence: "I eat a red apple every day.", imageUrl: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=500"),
+    LearningCard(word: "Banana", translation: "香蕉", sentence: "Monkeys love yellow bananas.", imageUrl: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=500"),
+    LearningCard(word: "Cat", translation: "小貓", sentence: "The cute cat is sleeping.", imageUrl: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500"),
+    LearningCard(word: "Dog", translation: "小狗", sentence: "The dog runs in the park.", imageUrl: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=500"),
+    LearningCard(word: "Elephant", translation: "大象", sentence: "An elephant has a very long nose.", imageUrl: "https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=500"),
+    LearningCard(word: "Fish", translation: "小魚", sentence: "Fish swim freely in the water.", imageUrl: "https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?w=500"),
+    LearningCard(word: "Giraffe", translation: "長頸鹿", sentence: "Look at the tall giraffe!", imageUrl: "https://images.unsplash.com/photo-1547721064-da6cfb341d50?w=500"),
+    LearningCard(word: "House", translation: "房子", sentence: "This is my lovely house.", imageUrl: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=500"),
+    LearningCard(word: "Ice cream", translation: "冰淇淋", sentence: "I want sweet ice cream in summer.", imageUrl: "https://images.unsplash.com/photo-1567206563064-6f60f40a2b57?w=500"),
+    LearningCard(word: "Juice", translation: "果汁", sentence: "Fresh orange juice tastes great.", imageUrl: "https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?w=500"),
+    LearningCard(word: "Kite", translation: "風箏", sentence: "Fly a kite on a windy day.", imageUrl: "https://images.unsplash.com/photo-1508873696983-2df515122519?w=500"),
+    LearningCard(word: "Lion", translation: "獅子", sentence: "The lion is strong and brave.", imageUrl: "https://images.unsplash.com/photo-1614027164847-1b28cfe1df60?w=500"),
+    LearningCard(word: "Monkey", translation: "猴子", sentence: "The monkey climbs up the tree.", imageUrl: "https://images.unsplash.com/photo-1540573133985-7587621d1544?w=500"),
+    LearningCard(word: "Nurse", translation: "護理師", sentence: "The kind nurse helps sick people.", imageUrl: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=500"),
+    LearningCard(word: "Orange", translation: "橘子", sentence: "Oranges are rich in Vitamin C.", imageUrl: "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?w=500"),
+    LearningCard(word: "Pencil", translation: "鉛筆", sentence: "I write my homework with a pencil.", imageUrl: "https://images.unsplash.com/photo-1585336261026-675768e74ed2?w=500"),
+    LearningCard(word: "Queen", translation: "女王", sentence: "The queen wears a shiny crown.", imageUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500"),
+    LearningCard(word: "Rabbit", translation: "兔子", sentence: "The white rabbit likes eating carrots.", imageUrl: "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=500"),
+    LearningCard(word: "Sun", translation: "太陽", sentence: "The bright sun is shining today.", imageUrl: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500"),
+    LearningCard(word: "Tiger", translation: "老虎", sentence: "A tiger has orange and black stripes.", imageUrl: "https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=500"),
+    LearningCard(word: "Umbrella", translation: "雨傘", sentence: "Take an umbrella when it rains.", imageUrl: "https://images.unsplash.com/photo-1517479149777-5f3b1511d5ad?w=500"),
+    LearningCard(word: "Violin", translation: "小提琴", sentence: "She plays beautiful music on the violin.", imageUrl: "https://images.unsplash.com/photo-1612225330812-01a9c6b355ec?w=500"),
+    LearningCard(word: "Watermelon", translation: "西瓜", sentence: "Watermelon is sweet and juicy.", imageUrl: "https://images.unsplash.com/photo-1587049352847-81a56d773cae?w=500"),
+    LearningCard(word: "Xylophone", translation: "木琴", sentence: "Kids like playing the wooden xylophone.", imageUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500"),
+    LearningCard(word: "Yacht", translation: "遊艇", sentence: "The white yacht sails on the blue sea.", imageUrl: "https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=500"),
+    LearningCard(word: "Zebra", translation: "斑馬", sentence: "Zebras have black and white stripes.", imageUrl: "https://images.unsplash.com/photo-1501705388883-4ed8a543392c?w=500"),
   ];
 
   @override
@@ -137,25 +145,9 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  // 匯入 JSON 單字庫對話框
+  // 匯入自訂 JSON 對話框
   void _showImportDialog() {
-    String sampleJson = '''[
-  {
-    "word": "Dog",
-    "translation": "小狗",
-    "sentence": "The dog is running in the park.",
-    "imageUrl": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=500"
-  },
-  {
-    "word": "Elephant",
-    "translation": "大象",
-    "sentence": "An elephant has a long nose.",
-    "imageUrl": "https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=500"
-  }
-]''';
-
-    _jsonImportController.text = sampleJson;
-
+    _jsonImportController.clear();
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -165,14 +157,14 @@ class _HomePageState extends State<HomePage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("請貼入 JSON 格式單字列表：", style: TextStyle(fontSize: 14, color: Colors.grey)),
+              const Text("貼入你的 JSON 格式單字列表：", style: TextStyle(fontSize: 14, color: Colors.grey)),
               const SizedBox(height: 8),
               TextField(
                 controller: _jsonImportController,
                 maxLines: 8,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                  hintText: "請貼上 JSON 資料...",
+                  hintText: '[{"word":"Dog","translation":"小狗","sentence":"The dog is cute.","imageUrl":"..."}]',
                 ),
                 style: const TextStyle(fontSize: 12, fontFamily: "monospace"),
               ),
@@ -200,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                   });
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("✅ 成功匯入 \ 個單字！")),
+                    SnackBar(content: Text("✅ 成功匯入 \ 個新單字！")),
                   );
                 }
               } catch (e) {
@@ -231,7 +223,7 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.file_upload_outlined, size: 28),
-            tooltip: "匯入單字庫",
+            tooltip: "匯入自訂 JSON",
             onPressed: _showImportDialog,
           )
         ],
