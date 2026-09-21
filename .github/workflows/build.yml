@@ -21,14 +21,17 @@ jobs:
       - name: 配置 Flutter 環境
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
-          cache: false
+          flutter-version: '3.22.x'
 
       - name: 下載依賴套件
         run: flutter pub get
 
-      - name: 自動補全 Android 專案結構
+      - name: 自動生成 Android 專案結構
         run: flutter create . --platforms=android --org com.example
+
+      - name: 全域強制將 jcenter() 替換為 mavenCentral() 修復套件問題
+        run: |
+          find ~/.pub-cache/ -name "build.gradle" -exec sed -i 's/jcenter()/mavenCentral()/g' {} + || true
 
       - name: 建置 APK
         run: flutter build apk --release --no-tree-shake-icons
