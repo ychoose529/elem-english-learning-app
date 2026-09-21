@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
@@ -36,6 +37,15 @@ class LearningCard {
     required this.sentence,
     required this.imageUrl,
   });
+
+  factory LearningCard.fromJson(Map<String, dynamic> json) {
+    return LearningCard(
+      word: json['word'] ?? '',
+      translation: json['translation'] ?? '',
+      sentence: json['sentence'] ?? '',
+      imageUrl: json['imageUrl'] ?? 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=500',
+    );
+  }
 }
 
 class HomePage extends StatefulWidget {
@@ -49,13 +59,15 @@ class _HomePageState extends State<HomePage> {
   final FlutterTts _flutterTts = FlutterTts();
   final stt.SpeechToText _speech = stt.SpeechToText();
   final TextEditingController _writingController = TextEditingController();
+  final TextEditingController _jsonImportController = TextEditingController();
 
   int _currentIndex = 0;
   bool _isListening = false;
   String _spokenText = "";
   String _feedbackMessage = "";
 
-  final List<LearningCard> _cards = [
+  // 預設國小單字庫
+  List<LearningCard> _cards = [
     LearningCard(
       word: "Apple",
       translation: "蘋果",
@@ -63,22 +75,16 @@ class _HomePageState extends State<HomePage> {
       imageUrl: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=500",
     ),
     LearningCard(
-      word: "Dog",
-      translation: "小狗",
-      sentence: "The dog is barking happily.",
-      imageUrl: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=500",
+      word: "Banana",
+      translation: "香蕉",
+      sentence: "Monkeys like to eat yellow bananas.",
+      imageUrl: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=500",
     ),
     LearningCard(
       word: "Cat",
       translation: "小貓",
-      sentence: "The cat is sleeping on the chair.",
+      sentence: "The cute cat is sleeping on the chair.",
       imageUrl: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500",
-    ),
-    LearningCard(
-      word: "Elephant",
-      translation: "大象",
-      sentence: "An elephant has a long nose.",
-      imageUrl: "https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=500",
     ),
   ];
 
@@ -131,16 +137,104 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // 匯入 JSON 單字庫對話框
+  void _showImportDialog() {
+    String sampleJson = '''[
+  {
+    "word": "Dog",
+    "translation": "小狗",
+    "sentence": "The dog is running in the park.",
+    "imageUrl": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=500"
+  },
+  {
+    "word": "Elephant",
+    "translation": "大象",
+    "sentence": "An elephant has a long nose.",
+    "imageUrl": "https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=500"
+  }
+]''';
+
+    _jsonImportController.text = sampleJson;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("📥 匯入自訂單字庫 JSON"),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text("請貼入 JSON 格式單字列表：", style: TextStyle(fontSize: 14, color: Colors.grey)),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _jsonImportController,
+                maxLines: 8,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  hintText: "請貼上 JSON 資料...",
+                ),
+                style: const TextStyle(fontSize: 12, fontFamily: "monospace"),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("取消"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              try {
+                final List<dynamic> parsedList = jsonDecode(_jsonImportController.text);
+                final List<LearningCard> newCards = parsedList.map((item) => LearningCard.fromJson(item)).toList();
+
+                if (newCards.isNotEmpty) {
+                  setState(() {
+                    _cards = newCards;
+                    _currentIndex = 0;
+                    _feedbackMessage = "";
+                    _spokenText = "";
+                    _writingController.clear();
+                  });
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("✅ 成功匯入 \ 個單字！")),
+                  );
+                }
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("❌ JSON 格式錯誤，請檢查後再試！"), backgroundColor: Colors.red),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.orangeAccent),
+            child: const Text("確認套用"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentCard = _cards[_currentIndex];
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("🎈 國小英文聽說讀寫樂園", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+        title: Text("🎈 國小英文聽說讀寫樂園 (\/\)", 
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         centerTitle: true,
         backgroundColor: Colors.orangeAccent,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.file_upload_outlined, size: 28),
+            tooltip: "匯入單字庫",
+            onPressed: _showImportDialog,
+          )
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -157,9 +251,14 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(15),
                       child: Image.network(
                         currentCard.imageUrl,
-                        height: 200,
+                        height: 180,
                         width: double.infinity,
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          height: 180,
+                          color: Colors.orange.shade100,
+                          child: const Icon(Icons.image, size: 80, color: Colors.orange),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 15),
@@ -179,7 +278,7 @@ class _HomePageState extends State<HomePage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
-                        "📖 閱讀句型：",
+                        "📖 閱讀句型：\",
                         textAlign: TextAlign.center,
                         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                       ),
@@ -198,6 +297,7 @@ class _HomePageState extends State<HomePage> {
                   label: const Text("聽發音", style: TextStyle(fontSize: 18)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.lightBlue,
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                   ),
@@ -208,6 +308,7 @@ class _HomePageState extends State<HomePage> {
                   label: Text(_isListening ? "聆聽中..." : "練習說", style: const TextStyle(fontSize: 18)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isListening ? Colors.redAccent : Colors.green,
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                   ),
@@ -217,13 +318,13 @@ class _HomePageState extends State<HomePage> {
             if (_spokenText.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 10),
-                child: Text("你說的是：", style: const TextStyle(fontSize: 16, color: Colors.blueGrey)),
+                child: Text("你說的是：\", style: const TextStyle(fontSize: 16, color: Colors.blueGrey)),
               ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             Card(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
                 child: Row(
                   children: [
                     Expanded(
@@ -245,7 +346,7 @@ class _HomePageState extends State<HomePage> {
             ),
             if (_feedbackMessage.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Text(
                   _feedbackMessage,
                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurple),
