@@ -21,15 +21,16 @@ jobs:
       - name: 配置 Flutter 環境
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.x'
+          channel: 'stable'
+          cache: false
 
       - name: 下載依賴套件
         run: flutter pub get
 
-      - name: 建立 Android 專案結構
+      - name: 自動補全 Android 專案結構
         run: flutter create . --platforms=android --org com.example
 
-      - name: 自動建置 APK (跳過過嚴檢查)
+      - name: 建置 APK
         run: flutter build apk --release --no-tree-shake-icons
 
       - name: 釋出並提供 APK 下載
