@@ -26,11 +26,11 @@ jobs:
       - name: 下載依賴套件
         run: flutter pub get
 
-      - name: 自動生成專案缺少的平台設定
-        run: flutter create . --platforms=android
+      - name: 建立 Android 專案結構
+        run: flutter create . --platforms=android --org com.example
 
-      - name: 自動建置 APK
-        run: flutter build apk --release
+      - name: 自動建置 APK (跳過過嚴檢查)
+        run: flutter build apk --release --no-tree-shake-icons
 
       - name: 釋出並提供 APK 下載
         uses: actions/upload-artifact@v4
